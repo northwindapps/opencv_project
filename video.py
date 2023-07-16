@@ -1,5 +1,6 @@
 import numpy as np
 import cv2 as cv
+import pytesseract
 cap = cv.VideoCapture(1)
 if not cap.isOpened():
  print("Cannot open camera")
@@ -53,9 +54,25 @@ while True:
                 arrow_y = y.item()
         i2 = i2 + 1
  cv.putText(colored, "Arrow tip", (arrow_x, arrow_y), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
- cv.imshow('arrow_location', colored)
+ 
 
+  
+#  print(arrow_x)
+#  print(arrow_y)
 
+ # Mention the installed location of Tesseract-OCR in your system
+ # pytesseract.pytesseract.tesseract_cmd = '/usr/local/Cellar/tesseract/5.3.1/bin/tesseract.exe'
+
+ # Read image from which text needs to be extracted
+
+ textImg = colored[(arrow_y - 100) :arrow_y + 10 ,(arrow_x - 100) : (arrow_x + 999)] 
+ # Convert the image to gray scale
+ grayImg = cv.cvtColor(textImg, cv.COLOR_BGR2GRAY)
+
+ text = pytesseract.image_to_string(grayImg,lang='fra') 
+ cv.imshow('arrow_location', grayImg)
+ if len(text) > 0:
+    print(text)
 
  # Display the resulting frame
  cv.imshow('frame', colored)
