@@ -2,6 +2,11 @@ import numpy as np
 import cv2 as cv
 import pytesseract
 cap = cv.VideoCapture(1)
+width = 1280	
+height = 800
+cap.set(cv.CAP_PROP_FRAME_WIDTH, width)
+cap.set(cv.CAP_PROP_FRAME_HEIGHT, height)
+
 if not cap.isOpened():
  print("Cannot open camera")
  exit()
@@ -68,9 +73,10 @@ while True:
  textImg = colored[(arrow_y - 100) :arrow_y + 10 ,(arrow_x - 150) : (arrow_x + 999)] 
  # Convert the image to gray scale
  grayImg= cv.cvtColor(textImg, cv.COLOR_BGR2GRAY)
+ grayImg = cv.convertScaleAbs(grayImg, alpha=1.5, beta=0)
 
  #ret,thresh = cv.threshold(grayImg,255,cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY,11,2)
- thresh = cv.adaptiveThreshold(grayImg,255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 9,7)
+ thresh = cv.adaptiveThreshold(grayImg,255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11,7)
 
  text = pytesseract.image_to_string(thresh,lang='fra') 
  cv.imshow('arrow_location', thresh)
