@@ -53,7 +53,7 @@ while True:
                 arrow_x = x.item()
                 arrow_y = y.item()
         i2 = i2 + 1
- cv.putText(colored, "Arrow tip", (arrow_x, arrow_y), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
+#  cv.putText(colored, "Arrow tip", (arrow_x, arrow_y), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
  
 
   
@@ -65,12 +65,15 @@ while True:
 
  # Read image from which text needs to be extracted
 
- textImg = colored[(arrow_y - 100) :arrow_y + 10 ,(arrow_x - 100) : (arrow_x + 999)] 
+ textImg = colored[(arrow_y - 100) :arrow_y + 10 ,(arrow_x - 150) : (arrow_x + 999)] 
  # Convert the image to gray scale
- grayImg = cv.cvtColor(textImg, cv.COLOR_BGR2GRAY)
+ grayImg= cv.cvtColor(textImg, cv.COLOR_BGR2GRAY)
 
- text = pytesseract.image_to_string(grayImg,lang='fra') 
- cv.imshow('arrow_location', grayImg)
+ #ret,thresh = cv.threshold(grayImg,255,cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY,11,2)
+ thresh = cv.adaptiveThreshold(grayImg,255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 9,7)
+
+ text = pytesseract.image_to_string(thresh,lang='fra') 
+ cv.imshow('arrow_location', thresh)
  if len(text) > 0:
     print(text)
 
