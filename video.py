@@ -69,19 +69,29 @@ while True:
  # pytesseract.pytesseract.tesseract_cmd = '/usr/local/Cellar/tesseract/5.3.1/bin/tesseract.exe'
 
  # Read image from which text needs to be extracted
+ 
+ if arrow_x is None:
+    print('None')
+ if arrow_y - 100 < 0:
+    print('None')
+ if arrow_x - 150 < 0:
+    print('None')
+ else :
+    #textImg = colored[(arrow_y - 100) :arrow_y + 10 ,(arrow_x - 150) : (arrow_x + 999)] 
+    textImg = colored[(arrow_y - 100) :arrow_y + 10 ,(arrow_x - 150) : (arrow_x + 200)] 
+    # Convert the image to gray scale
+    textImg = cv.blur(textImg,[2,2])
+    textImg = cv.resize(textImg, None, fx = 2.0, fy = 2.0, interpolation= cv.INTER_CUBIC)
+    grayImg= cv.cvtColor(textImg, cv.COLOR_BGR2GRAY)
+    #grayImg = cv.convertScaleAbs(grayImg, alpha=1.5, beta=0)
 
- textImg = colored[(arrow_y - 100) :arrow_y + 10 ,(arrow_x - 150) : (arrow_x + 999)] 
- # Convert the image to gray scale
- grayImg= cv.cvtColor(textImg, cv.COLOR_BGR2GRAY)
- grayImg = cv.convertScaleAbs(grayImg, alpha=1.5, beta=0)
+    #ret,thresh = cv.threshold(grayImg,255,cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY,11,2)
+    thresh = cv.adaptiveThreshold(grayImg,255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11,6)
 
- #ret,thresh = cv.threshold(grayImg,255,cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY,11,2)
- thresh = cv.adaptiveThreshold(grayImg,255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11,7)
-
- text = pytesseract.image_to_string(thresh,lang='fra') 
- cv.imshow('arrow_location', thresh)
- if len(text) > 0:
-    print(text)
+    text = pytesseract.image_to_string(thresh,lang='fra') 
+    cv.imshow('arrow_location', thresh)
+    if len(text) > 0:
+        print(text)
 
  # Display the resulting frame
  cv.imshow('frame', colored)
