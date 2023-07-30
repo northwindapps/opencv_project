@@ -5,12 +5,15 @@ import cv2 as cv
 import numpy as np
 from flask import Flask, request
 from flask_cors import CORS
-from imageio import imread
+from imageio.v2 import imread
 import pytesseract
 
 app = Flask(__name__)
 CORS(app)
-pytesseract.pytesseract.tesseract_cmd = "C:\Program Files\Tesseract-OCR\\tesseract.exe"
+
+@app.get("/hello")
+def hello():
+    return {"result", True}
 
 @app.post("/dictionary")
 def create_dictionary():
@@ -33,7 +36,7 @@ def create_dictionary():
     print(filtered)
 
     cv.imwrite("reconstructed.jpg", gray)
-    cv.imshow('img', gray)
+    # cv.imshow('img', gray)
     # with open("compare.jpg", "wb") as file:
     #     file.write(base64.b64decode(request_data))
     return {"result": filtered}
